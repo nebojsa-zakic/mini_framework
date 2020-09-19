@@ -1,0 +1,11 @@
+.tekstsk
+{
+	display:block;	
+	width:60%;
+	margin-left:10%;
+	margin-top:5%;
+	word-wrap:break-word;
+	color:#222;
+	font-size:26px;
+	line-height:180%;
+}

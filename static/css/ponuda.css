@@ -1,0 +1,21 @@
+.naslov
+{
+	margin-left:10%;
+	font-size:35px;
+	max-width:80%;
+	font-weight:bold;
+	margin:5% 2% 1% 10%;
+	color:#222;
+}
+
+.cena
+{
+	font-size:30px;
+	color:#222;
+	float:right;
+	margin-right:10%;
+	margin-top:2.5%;
+	margin-bottom:2.5%;
+	margin-left:10%;
+	font-weight:bold;
+}

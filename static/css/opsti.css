@@ -1,0 +1,88 @@
+*
+{
+	font-family: 'Josefin Sans', serif;
+}
+#logo
+{
+	display:block;
+	margin:0 auto;
+	width:25%;
+	min-width:200px;
+	margin-bottom:2.5%;
+	margin-top:10vh;
+	filter: brightness(180%);
+}
+
+#pozadina
+{
+	width:101%;
+	top:-1px;
+	position:fixed;
+	z-index:-1;
+	left:-1%;
+	overflow-x:hidden;
+	filter: blur(4px);
+	min-height:100vh;
+}
+
+#meni,#sadrzaj
+{
+	display:block;
+	width:90%;
+	margin:0 auto;
+}
+
+#meni
+{
+	margin-bottom:-22px;
+
+}
+#sadrzaj
+{
+	margin-top:0px;
+	background-color:rgba(170,170,250,0.6);
+	box-shadow: 1px 1px 3px #222;
+	padding:10px;
+}
+.textslika,.tekst
+{
+	max-width:80%;
+	margin-top:3%;
+	font-size:20px;
+	word-wrap:break-word;
+	color:#222;
+}
+
+.textslika
+{
+	margin-left:15%;
+	width:70%;
+}
+.tekst
+{
+	line-height:160%;
+	width:80%;
+	border:0px solid red;
+	margin-left:10%;
+}
+#sadrzaj
+{
+	padding-bottom:30px;
+	margin-top:20px;
+	overflow-y:hidden;
+}
+
+nav a:hover
+{
+	text-decoration:underline;
+}
+
+nav a
+{
+	line-height:150%;
+	color:White;
+	display:inline-block;
+	font-size:25px;
+	margin-right:5%;
+	text-decoration:none;
+}

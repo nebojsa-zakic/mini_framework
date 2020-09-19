@@ -1,0 +1,12 @@
+#sadrzaj {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 8px;
+}
+.glslika {
+	height: 200px;
+	width: 100%;
+	display: inline-block;
+	border: 1px solid white;
+	object-fit: cover;
+}
