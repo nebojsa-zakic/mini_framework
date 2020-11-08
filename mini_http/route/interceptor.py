@@ -1,13 +1,15 @@
 _interceptors = list()
 
-METHODS_WITH_BODY = ['POST', 'PUT', 'DELETE']
+METHODS_WITH_BODY = ['POST', 'PUT', 'DELETE', 'PATCH']
 
 
 def register(method, path, callback):
+    global _interceptors
     _interceptors.append((method, path, callback,))
 
 
 def execute(method, path, request_params, body):
+    global _interceptors
     for int_method, int_path, callback in _interceptors:
 
         if method != int_method:

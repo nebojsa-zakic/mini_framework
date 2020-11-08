@@ -19,18 +19,28 @@ def resolve(req_param_map, body):
         return get_route_data['callback'](req_param_map, get_route_data['path_variables'])
     elif 'POST' in req_param_map:
         post_route_data = find_post(req_param_map['POST'])
-        return post_route_data['callback'](req_param_map, post_route_data['path_variables'])
+        if post_route_data == None:
+            return None
+        return post_route_data['callback'](req_param_map, body, post_route_data['path_variables'])
     elif 'PUT' in req_param_map:
         put_route_data = find_put(req_param_map['PUT'])
-        return put_route_data['callback'](req_param_map, put_route_data['path_variables'])
+        if put_route_data == None:
+            return None
+        return put_route_data['callback'](req_param_map, body, put_route_data['path_variables'])
     elif 'DELETE' in req_param_map:
-        delete_route_data = find_delete(req_param_map['GET'])
-        return delete_route_data['callback'](req_param_map, delete_route_data['path_variables'])
+        delete_route_data = find_delete(req_param_map['DELETE'])
+        if delete_route_data == None:
+            return None
+        return delete_route_data['callback'](req_param_map, body, delete_route_data['path_variables'])
     elif 'PATCH' in req_param_map:
         patch_route_data = find_patch(req_param_map['PATCH'])
-        return patch_route_data['callback'](req_param_map, patch_route_data['path_variables'])
+        if patch_route_data == None:
+            return None
+        return patch_route_data['callback'](req_param_map, body, patch_route_data['path_variables'])
     elif 'OPTIONS' in req_param_map:
         options_route_data = find_options(req_param_map['OPTIONS'])
+        if options_route_data == None:
+            return None
         return options_route_data['callback'](req_param_map, options_route_data['path_variables'])
     elif 'HEAD' in req_param_map:
         head_route_data = find_head(req_param_map['HEAD'])
@@ -39,9 +49,13 @@ def resolve(req_param_map, body):
         return head_route_data['callback'](req_param_map, head_route_data['path_variables'])
     elif 'TRACE' in req_param_map:
         trace_route_data = find_trace(req_param_map['TRACE'])
+        if trace_route_data == None:
+            return None
         return trace_route_data['callback'](req_param_map, trace_route_data['path_variables'])
     elif 'CONNECT' in req_param_map:
         connect_route_data = find_trace(req_param_map['CONNECT'])
+        if connect_route_data == None:
+            return None
         return connect_route_data['callback'](req_param_map, connect_route_data['path_variables'])
     else:
         raise Exception("Unknown method")
@@ -159,6 +173,7 @@ def get(route, callback):
     global get_routes, head_routes
     _append_to_routes_list_data(get_routes, route, callback)
     _append_to_routes_list_data(head_routes, route, callback)
+
 
 def post(route, callback):
     global post_routes

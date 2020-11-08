@@ -54,10 +54,10 @@ def _get_now():
 
 def _handle_print(date_text, level, message, text_color=None):
     if text_color == None:
-        print(date_text + " " + level + ": " + message)
+        print(date_text + " " + level + ": " + str(message))
     else:
         print(text_color + date_text + " " +
-              level + ": " + message + END_COLOR)
+              level + ": " + str(message) + END_COLOR)
 
 
 def error(message, show_date=True):

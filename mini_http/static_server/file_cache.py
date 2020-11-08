@@ -6,22 +6,28 @@ _file_cache = dict()
 _root_dir = os.getcwd()
 
 # Root dir must be set prior to precaching folder outside of main file
+
+
 def set_root_dir(dir):
     _root_dir = dir
+
 
 def get_file(file_destination):
     if file_destination in _file_cache:
         return _file_cache[file_destination]
     if log.is_debugging():
-        log.debug("File " + file_destination + " has not been found within cache.")
+        log.debug("File " + file_destination +
+                  " has not been found within cache.")
     return None
 
 
 def cache_file(file_destination):
+    global _file_cache
     if os.path.isdir(file_destination):
         raise Exception("Destination is not a path: " + file_destination)
     file = open(file_destination, 'rb')
-    cached_file_name = "." + file_destination[len(_root_dir):].replace("\\", "/")
+    cached_file_name = "." + \
+        file_destination[len(_root_dir):].replace("\\", "/")
     if log.is_debugging():
         log.debug("Caching file: " + cached_file_name)
     _file_cache[cached_file_name] = file.read()

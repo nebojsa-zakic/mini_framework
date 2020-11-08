@@ -38,11 +38,11 @@ def handle_conn(conn):
             res = static.file_exists(req_param_map[method])
 
         if res == None:
-            raise Exception("Path not found: " + req_param_map[method])
+            raise Exception("Path not found: " + str(req_param_map))
 
         conn.send(res)
     except Exception as e:
-        log.debug(e)
+        log.error(e)
         conn.send(response.not_found(""))
 
     conn.close()

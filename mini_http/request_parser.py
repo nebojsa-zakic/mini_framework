@@ -1,3 +1,5 @@
+import mini_http.log.logger as log
+
 HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'CONNECT']
 
 def form_query_params(query_params_string):
@@ -17,6 +19,7 @@ def parse(req):
     decoded_req = req.decode()
 
     req_param_map = dict()
+    req_param_map['headers'] = dict()
 
     body = None
     method = None
@@ -24,7 +27,9 @@ def parse(req):
     if '\r\n\r\n' in decoded_req:
         body = decoded_req.split('\r\n\r\n')[1]
 
-    for line in decoded_req.split('\n'):
+    log.debug(decoded_req)
+    for line in decoded_req.splitlines():
+
         if line == '\r':
             break
 
@@ -43,10 +48,13 @@ def parse(req):
                 query_params = value.split('?')[1:]
                 req_param_map['query_params'] = form_query_params(query_params)
                 value = value.split('?')[0]
+            req_param_map[param] = value
+            continue
 
         if '\r' in value:
             value = value.replace('\r', '')
+        log.warn(value)
+        req_param_map['headers'][param] = value
 
-        req_param_map[param] = value
-
+    log.trace('Request data: ' + str(req_param_map))
     return req_param_map, body, method

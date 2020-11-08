@@ -10,7 +10,6 @@ import mini_http.static_server.static as static
 from datetime import date
 import json as jsn
 import threading
-import tkinter as tk
 import queue
 
 # Port on which http server will be running
@@ -18,8 +17,10 @@ SERVER_PORT = 3333
 
 # Commented in order to trigger db connection
 # import app_repo as repo
-
 # Class encodes dates so they can be serialized to JSON
+
+
+FAKE_JWT = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJNaW5pIEh0dHAiLCJpYXQiOjE2MDQ4MzMyMDAsImV4cCI6MTYwNDgzNDEwMCwiYXVkIjoiS29taXNpamEiLCJzdWIiOiJ6YXZyc25pX3JhZCIsInVzZXJuYW1lIjoiQWRtaW4ifQ.ozHpmD6wkZdvzjvSqqfU8MM8AVLG2ZffVi2_BSkNq14'
 
 
 class DateTimeEncoder(jsn.JSONEncoder):
@@ -32,26 +33,18 @@ class DateTimeEncoder(jsn.JSONEncoder):
 
 # Echoes get path
 def hello(req, path_vars):
-    return response.ok(req['GET'], 'text/plain')
+    print(req['GET'])
+    return response.ok(req['GET'], 'text/plain', {'Test': '123-322'})
 
 # Returns current date
 
 
-def current_date(req):
+def current_date(req, path_vars):
     today = date.today().strftime("%d %B  %Y")
     return response.ok(today, 'text/plain')
 
-# This works but it won't work on your machine since you don't have my database
-# I've added image as proof
-# def user_list(req):
-#     users = repo.fetch_users()
-#     stringified_users = jsn.dumps(users, cls=DateTimeEncoder)
-#     return response.ok(stringified_users, 'application/json')
 
-# Echoes recieved json
-
-
-def json(req, body):
+def json(req, body, path_vars):
     string_json = body
     parsed_json = jsn.loads(string_json)
 
@@ -68,8 +61,8 @@ def hello_world(param_map):
 
 
 def nope_lolz(param_map):
-    log.info('No')
-    return False
+    log.info(str(param_map))
+    return True
 
 
 def static_rewrite(path, ext):
@@ -100,10 +93,44 @@ def html_rewrite(path, ext):
 
     return path
 
+def verify_auth(request_params):
+    headers = request_params['headers']
+    log.warn(request_params)
+    if 'Authorization' not in headers or headers['Authorization'] != 'Bearer ' + FAKE_JWT:
+        return False
+    
+    return True
+
+
+def admin_data(req, path_vars):
+    data = {
+        "id": "322",
+        "name": "Administrator",
+        "email": "admin@admin.com",
+        "roles": ["ROLE_ADMIN", "ROLE_USER"]
+    }
+    serialized_data = jsn.dumps(data, indent = 4)
+    return response.ok(serialized_data, 'application/json', {})
+
+def authenticate(req, body, path_vars):
+    global FAKE_JWT
+    credidentials = jsn.loads(body)
+    log.info(credidentials)
+    if 'user' not in credidentials or 'pass' not in credidentials:
+        return response.bad_request("Missing credidentials", 'text/plain')
+
+    if credidentials['user'] == 'admin' and credidentials['pass'] == 'admin':
+        return response.ok("Authorization accepted for user Administrator", 'text/plain', {'Authorization': 'Bearer ' + FAKE_JWT})
+    return response.bad_request("Invalid credidentials", 'text/plain')
+
 
 def multi_param_text(req, path_vars):
     print(path_vars)
     return response.ok(path_vars['v1'] + ' ' + path_vars['v2'] + ' ' + path_vars['v3'], 'text/plain')
+
+
+def test_post(req, body, path_var):
+    return response.ok(str(req), 'text/plain', {'Test': '123-322'})
 
 
 # This rewrites paths to hit /static folder before serving static file
@@ -116,6 +143,9 @@ router.get('/img/{num}', server_img)
 router.get('/test/{abc}', hello)
 router.post('/json', json)
 router.get('/date', current_date)
+router.post('/test123', test_post)
+router.post('/authenticate', authenticate)
+router.get('/account', admin_data)
 # router.get('/users', user_list)
 
 # I've had time only to implement interceptors which match with starts with
@@ -124,8 +154,8 @@ router.get('/date', current_date)
 # interceptor.register('GET', '/', hello_world)
 
 # This would throw 404 if it wasn't for the interceptor
-interceptor.register('GET', '/json', nope_lolz)
-
+interceptor.register('GET', '/', nope_lolz)
+interceptor.register('GET', '/account', verify_auth)
 
 def run_server():
     global SERVER_PORT
@@ -143,7 +173,6 @@ def run_server():
     log.info("This is an info")
     log.debug("This is a debug message")
     log.trace("This is a trace message")
-    print(router.get_routes)
     mini.start()
 
 
