@@ -20,7 +20,7 @@ def is_debugging():
     return LOG_LEVEL >= 3
 
 def is_tracing():
-    return LOG_LEVEL >= 3
+    return LOG_LEVEL >= 4
 
 def set_log_level(log_level):
     global LOG_LEVEL
